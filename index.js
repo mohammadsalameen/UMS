@@ -1,9 +1,9 @@
 import express from 'express'
 import { connectionDB } from './DB/connection.js'       
-import userRouter from './src/modules/user/user.js'
+import userRouter from './src/modules/user/user.router.js'
 const app = express();
 app.use(express.json());
-const PORT = 4000;
+const PORT = 6000;
 connectionDB();
 app.use('/users', userRouter);
 

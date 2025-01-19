@@ -1,35 +1,40 @@
 import { Router } from "express";
 import UserModel from "../../../DB/model/user.model.js";
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 const router = Router();
 
+//get users
 router.get('/', async (req, res) =>{
-    const users = await UserModel.findAll();
+    const decoded = jwt.verify(token, 'mohammad');
+    if(decoded.role != 'admin'){
+        return res.status(400).json({message : "not authorized"})
+    }
+    const users = await UserModel.findAll({
+        attributes : ['name', 'email']
+    });
     return res.status(200).json({message : "success" , users})
 });
-//register
-router.post('/', async (req, res) =>{
-    const {name, email, password} = req.body;
-    const hashPassword = bcrypt.hashSync(password, 8);
-    await UserModel.create({name, email, password : hashPassword});
 
-    return res.status(201).json({message : "success"});
-});
-//login
-router.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-    const user = await UserModel.findOne({
-        where : {email : email}
-    });
+//delete user
+router.delete('/:id', async (req, res) =>{
+    const {id} = req.params;
+
+    const {token} = req.headers;
+    const decoded = jwt.verify(token, 'mohammad');
+    if(decoded.role != 'admin'){
+        return res.status(400).json({message : "not authorized"})
+    }
+    const user = await UserModel.findByPk(id);
     if(user == null){
-        return res.status(404).json({message : "Invalid email"});
+        return res.status(404).json({message : "user not found"})
     }
-    const check = bcrypt.compareSync(password, user.password);
-    if(check == false){
-        return res.status(404).json({message : "Invalid password"});
-    }
-    const token = jwt.sign({ id : user.id, name : user.name }, 'mohammad');
-    return res.status(200).json({message : "success", token});
-})
+    await UserModel.destroy({
+        where : {
+            id : id
+        }
+    });
+    return res.status(200).json({message : "success"});
+});
+
+
 export default router;  

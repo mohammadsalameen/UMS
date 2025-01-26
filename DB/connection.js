@@ -5,5 +5,5 @@ export const sequelize = new Sequelize('ums', 'root', '', {
   });
 
   export const connectionDB = () =>{
-    sequelize.sync({force : true}).then(() => console.log("connection established")).catch((err) => console.log("unable to connect with database" + err));
+    sequelize.sync().then(() => console.log("connection established")).catch((err) => console.log("unable to connect with database" + err));
   }

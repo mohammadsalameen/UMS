@@ -3,32 +3,28 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import UserModel from "../../../DB/model/user.model.js";
 import   { loginSchema, registerSchema }  from "./auth.validation.js";
+import validation from "../../middleware/validation.js";
+import { SendEmail } from "../../../utils/SendEmail.js";
 const router = Router();
+
 //register
-router.post("/register", async (req, res) => {
+router.post("/register",validation(registerSchema) ,async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const result = registerSchema.validate({name, email, password});
-    if(result.error){
-        return res.status(400).json({message : "validation error", error : result.error});
-    }
     const hashPassword = bcrypt.hashSync(password, 8);
     await UserModel.create({ name, email, password: hashPassword });
-
-    return res.status(201).json({ message: "success" });
+    const html = `<div><h2>Hello ya ${name}</h2></div>`;
+    await SendEmail(email, "welcome", html);
+    return res.status(201).json({ message: "success"});
   } catch (err) {
-    return res.status(500).json("server error", err);
+    return res.status(500).json({message : "server error", err : err.stack});
   }
 });
 
 //login
-router.post("/login", async (req, res) => {
+router.post("/login",validation(loginSchema) ,async (req, res) => {
   try {
     const { email, password } = req.body;
-    const result = loginSchema.validate({email, password});
-    if(result.error){
-        return res.status(400).json({message : "validation error", error : result.error});
-    }
     const user = await UserModel.findOne({
       where: { email: email },
     });
@@ -45,7 +41,7 @@ router.post("/login", async (req, res) => {
     );
     return res.status(200).json({ message: "success", token });
   } catch (err) {
-    return res.status(500).json("server error", err);
+    return res.status(500).json({message : "server error", err});
   }
 });
 export default router;

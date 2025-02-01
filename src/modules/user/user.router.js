@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UserModel from "../../../DB/model/user.model.js";
 import auth from "../../middleware/auth.js";
+import { SendEmail } from "../../../utils/SendEmail.js";
 const router = Router();
 
 //get users
@@ -9,10 +10,11 @@ router.get('/', auth() ,async (req, res) =>{
         const users = await UserModel.findAll({
             attributes : ['name', 'email']
         });
+        // SendEmail();
         return res.status(200).json({message : "success" , users})
     }
     catch(err){
-        return res.status(500).json("Server error")
+        return res.status(500).json({message : "server error", err});
     }
 });
 
@@ -32,7 +34,7 @@ router.delete('/:id',auth() ,async (req, res) =>{
         return res.status(200).json({message : "success"});
     }
     catch(err){
-        return res.status(500).json("server error", err);
+        return res.status(500).json({message : "server error", err});
     }
 });
 

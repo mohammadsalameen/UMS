@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 const auth = () => {
-  try {
     return (req, res, next) => {
       const { token } = req.headers;
       const decoded = jwt.verify(token, "mohammad");
@@ -10,9 +9,7 @@ const auth = () => {
       req.id = decoded.id;
       next();
     };
-  } catch (err) {
-    return res.status(500).json("server error", err);
-  }
+
 };
 
 export default auth;

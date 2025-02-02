@@ -9,6 +9,10 @@ const initApp = (app, express) => {
   app.use("/auth", authRouter);
   //localhost:6001/blogs
   app.use("/blogs", blogRouter);
+
+  app.use((err, req, res, next) =>{
+    return res.status(err.statusCode).json({message : err.message});
+  })
 };
 
 export default initApp;

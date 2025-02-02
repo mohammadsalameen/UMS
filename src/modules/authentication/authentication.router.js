@@ -6,16 +6,15 @@ import   { loginSchema, registerSchema }  from "./auth.validation.js";
 import validation from "../../middleware/validation.js";
 import { SendEmail } from "../../../utils/SendEmail.js";
 const router = Router();
-
 //register
 router.post("/register",validation(registerSchema) ,async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const hashPassword = bcrypt.hashSync(password, 8);
     await UserModel.create({ name, email, password: hashPassword });
-    const html = `<div><h2>Hello ya ${name}</h2></div>`;
-    await SendEmail(email, "welcome", html);
-    return res.status(201).json({ message: "success"});
+    // const html = `<div><h2>Hello ya ${name}</h2></div>`;
+    // await SendEmail(email, "welcome", html);
+    return res.status(201).json({ message: "success" });
   } catch (err) {
     return res.status(500).json({message : "server error", err : err.stack});
   }

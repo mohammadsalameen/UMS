@@ -1,7 +1,7 @@
 import express from 'express'
 import initApp from './index.router.js'
 const app = express();
-const PORT = 6001;
+const PORT = 6000;
 
 initApp(app, express);
 

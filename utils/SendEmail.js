@@ -14,4 +14,5 @@ export async function SendEmail(to, subject, html) {
     subject, // Subject line
     html, // html body
   });
+return info;
 }

@@ -8,9 +8,8 @@ export const register = async (req, res) => {
     const { name, email, password } = req.body;
     const hashPassword = bcrypt.hashSync(password, 8);
     await UserModel.create({ name, email, password: hashPassword });
-    const html = `<div><h2>Hello ya ${name}</h2></div>`;
-    const test = SendEmail(email, "welcome", html);
-    return test;
+    // const html = `<div><h2>Hello ya ${name}</h2></div>`;
+    // await SendEmail(email, "welcome", html);
     return res.status(201).json({ message: "success" });
 }
 

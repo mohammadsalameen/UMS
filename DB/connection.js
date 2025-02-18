@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
-export const sequelize = new Sequelize('ums', 'root', '', {
-    host: 'localhost',
+export const sequelize = new Sequelize('freedb_UMSProject', 'freedb_mohammad@', '?JCuPY2eGwDtwc7', {
+    host: 'sql.freedb.tech',
+    port : 3306,
     dialect: 'mysql' /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
   });
 

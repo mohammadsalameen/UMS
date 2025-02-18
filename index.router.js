@@ -11,6 +11,9 @@ const initApp = (app, express) => {
   app.use("/users", userRouter);
   app.use("/auth", authRouter);
   app.use("/blogs", blogRouter);
+  app.use('/', (req, res)=>{
+  return res.status(200).json("Welcome");
+  });
   app.use('*', (req, res, next) =>{
     return next(new AppError("page not found", 404));
   });
